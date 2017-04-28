@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Angular QuickStart</title>
+  <base href="/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- link rel="stylesheet" href="styles.css"-->
+
+
+  <link rel="shortcut icon" href="images/genesis_thicker32.png" />
+  <link href="deeppurple-amber.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/3.6.6/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyBHuPKVasm8Zz3VORTDS_f85UMGzg4nJuQ",
+      authDomain: "genesis-3aa93.firebaseapp.com",
+      databaseURL: "https://genesis-3aa93.firebaseio.com",
+      storageBucket: "genesis-3aa93.appspot.com",
+      messagingSenderId: "233818584097"
+    };
+    firebase.initializeApp(config);
+
+  </script>
+
+  <script src="js/global.js "></script>
+  <script src="js/instruments/soundfont-player.js"></script>
+
+  <!-- Polyfill(s) for older browsers -->
+  <script src="node_modules/core-js/client/shim.min.js"></script>
+
+  <script src="node_modules/zone.js/dist/zone.js"></script>
+
+  <script src="node_modules/reflect-metadata/Reflect.js"></script>
+
+  <script src="node_modules/systemjs/dist/system.src.js"></script>
+  <script src="js/synaptic/synaptic.js"></script>
+
+  <script src="systemjs.config.js"></script>
+  <script>
+    System.import('main.js').catch(function (err) {
+      console.error(err);
+    });
+
+  </script>
+</head>
+
+<body>
+  <my-app>Loading AppComponent content here ...</my-app>
+</body>
+
+</html>

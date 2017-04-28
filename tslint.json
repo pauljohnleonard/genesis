@@ -5,7 +5,7 @@
       true,
       "check-space"
     ],
-    "curly": true,
+  //  "curly": true,
     "eofline": true,
     "forin": true,
     "indent": [
@@ -57,11 +57,11 @@
       "check-catch",
       "check-else",
       "check-whitespace"
-    ],
+    ],/*
     "quotemark": [
       true,
       "single"
-    ],
+    ],*/
     "radix": true,
     "semicolon": [
       "always"

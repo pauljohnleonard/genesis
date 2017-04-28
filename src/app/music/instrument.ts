@@ -14,17 +14,16 @@ export class Instrument {
     sustaining: boolean = false
     sustainedKeys: Array<boolean> = new Array(128)
     loading: boolean
-    name :string
 
-    constructor(name: string, private monitor: any) {
+    constructor(public name: string, private monitor: any) {
         this.setInst(name)
-        this.sustainedKeys.fill(false)
+        this.sustainedKeys.fill(false)    
     }
 
 
     mute(yes: boolean) {
 
-        if (this.muted == yes) { return }
+        if (this.muted == yes) return;
         this.muted = yes
         //      console.log(this.name + " mute " + yes);
         if (yes) {
@@ -43,9 +42,9 @@ export class Instrument {
         // this.obs.next("loading . . . ")
         Soundfont.instrument(audioContext, name).then((inst: any) => {
             this.inst = inst
-            this.loading = false
+            this.loading=false    
             this.gainValue = inst.out.gain.value
-        })
+          })
     }
 
 

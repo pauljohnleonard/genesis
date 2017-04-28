@@ -8,57 +8,62 @@ import { Savable } from './savable'
 import { Generator } from './generator'
 import { Scenable } from './scenable'
 
-export class AI  extends  Savable implements Scenable {
 
+export class AI extends Savable implements Scenable {
 
-    out:Array<number>
-    saved:boolean
-    activateCnt:number=0
-    nIn:number
-    nOut:number
-    net:Net
-    nets:Array<Net>=[]
-    pulse:Pulse
-    snapID:number=null
+    out: Array<number>
+    saved: boolean
+    activateCnt = 0
+    nIn: number
+    nOut: number
+    net: Net
+    nets: Array<Net> = []
+    pulse: Pulse
+    snapID: number = null
 
-
-    constructor(private dbService:DBService,private netService:NetService){
+    /**
+     *
+     * @param dbService
+     * @param netService
+     */
+    constructor(private dbService: DBService, private netService: NetService) {
         super()
     }
 
-  
-    start() {}
-    stop() {}
+
+    start() { }
+
+    stop() { }
 
     /* save() {
-        var w = this.net.weights
-        var data = JSON.stringify(w)
+        let w = this.net.weights
+        let data = JSON.stringify(w)
         this.saved = true
     }
     */
 
-    snap():number {
-        this.snapID=this.nets.length
+    snap(): number {
+        this.snapID = this.nets.length
         this.nets.push(this.net)
-        
-        return this.nets.length-1
+
+        return this.nets.length - 1
     }
 
-    select(i:number) {
-        if (this.nets.length === 0 ) return
-        i=(i+this.nets.length)%this.nets.length
-        this.net=this.nets[i]
-        this.snapID=i
+    select(i: number) {
+        if (this.nets.length === 0) return
+        i = (i + this.nets.length) % this.nets.length
+        this.net = this.nets[i]
+        this.snapID = i
     }
 
-    snapID2Label(i:number):string {
-        if (i === null ) return '?'
-        var chr = String.fromCharCode(65 + i);
+    snapID2Label(i: number): string {
+        if (i === null) return '?'
+        let chr = String.fromCharCode(65 + i);
         return chr
-    } 
+    }
 
     //  ai;
-    init(pulse:Pulse, net:any) {
+    init(pulse: Pulse, net: any) {
         this.nIn = net.nIn
         this.nOut = net.nOut
         this.pulse = pulse
@@ -68,39 +73,39 @@ export class AI  extends  Savable implements Scenable {
     }
 
 
-    implant(net:any) {
-	 
-        
-        var proto:any
-        if (net.type === undefined) {
-            proto=this.netService.types["Elman"].prototype
-         } else {
-            proto=this.netService.types[net.type].prototype
-         }
+    implant(net: any) {
 
-        this.net=Object.create(proto);
-    
-        var generator = new Generator(net.seed)
+
+        let proto: any
+        if (net.type === undefined) {
+            proto = this.netService.types["Elman"].prototype
+        } else {
+            proto = this.netService.types[net.type].prototype
+        }
+
+        this.net = Object.create(proto);
+
+        let generator = new Generator(net.seed)
 
         if (net.nIn !== this.nIn) {
-            if (net.nIn) console.log(" input mismatch dela with it PAUL ")
-            net.nIn=this.nIn
+            if (net.nIn) console.log(" input mismatch deal with it PAUL ")
+            net.nIn = this.nIn
         }
-     
+
         if (net.nOut !== this.nOut) {
-            if (net.nOut) console.log(" output mismatch dela with it PAUL ")
-            net.nOut=this.nOut
+            if (net.nOut) console.log(" output mismatch deal with it PAUL ")
+            net.nOut = this.nOut
         }
-        
-        this.net.constructor(net.nIn,net.nHidden,net.nOut,generator)
+
+        this.net.constructor(net.nIn, net.nHidden, net.nOut, generator)
 
         this.out.fill(0.5)
         this.activateCnt = 0
-        this.snapID=null
+        this.snapID = null
     }
 
     toHTML() {
-        var str = "<p id=AI>  Net.out\t:"
+        let str = "<p id=AI>  Net.out\t:"
         for (let i = 0; i < this.out.length; i++) {
             str += "\t" + this.out[i].toFixed(3)
         }
@@ -113,15 +118,15 @@ export class AI  extends  Savable implements Scenable {
     saveDB(saver: any): any {
         if (this.id !== null) return this.id
 
-        var postItems: any = {}
-        var id=this.net.saveDB(saver)
-        postItems.net=id
-    
-        var id = saver.newIDItem('ai', postItems)
-        
+        let postItems: any = {}
+        let id = this.net.saveDB(saver)
+        postItems.net = id
+
+        id = saver.newIDItem('ai', postItems)
+
         this.setID(id)
         return id
 
     }
-   
+
 }

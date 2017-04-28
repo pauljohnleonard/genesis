@@ -21,6 +21,7 @@ export class AIDetailComponent {
 
     }
 
+
     ngOnInit() {
         console.log("NGINIT")
         for (let name in this.netService.types) {

@@ -7,10 +7,45 @@ import { Thing } from './thing'
 import { AI } from './ai'
 import { Mapper } from './mapper'
 
+
+
+export class Band {
+    players: Array<Player> = []
+
+
+    solo(p: Player) {
+
+        p.soloed = !p.soloed
+
+        if (p.soloed) p.muted = false
+
+        let soloedCnt = 0;
+
+        this.players.forEach((px) => {
+            if (px.soloed) soloedCnt++
+        })
+
+        if (soloedCnt === 0) {
+            this.players.forEach((px) => {
+                px.tmpMuted = false
+                px.inst.mute(p.muted)
+            })
+        } else {
+            this.players.forEach((px) => {
+                if (!px.soloed) {
+                    px.tmpMuted = true
+                    px.inst.mute(true)
+                } else {
+                    px.tmpMuted = false
+                    px.inst.mute(false)
+                }
+            })
+        }
+    }
+}
+
+
 export class Player extends Savable implements Ticker, Thing {
-
-
-    static players: Array<Player> = []
 
     soloed = false
     tmpMuted = false
@@ -25,9 +60,9 @@ export class Player extends Savable implements Ticker, Thing {
     recording= false
     mapper: Mapper = null
 
-    constructor(public music: Music) {
+    constructor(public music: Music, public band: Band) {
         super()
-        Player.players.push(this)
+        band.players.push(this)
         this.music.pulse.addClient(this)
     }
 
@@ -50,33 +85,7 @@ export class Player extends Savable implements Ticker, Thing {
     }
 
     solo() {
-
-        this.soloed = !this.soloed
-
-        if (this.soloed) this.muted = false
-
-        let soloedCnt = 0;
-
-        Player.players.forEach((p) => {
-            if (p.soloed) soloedCnt++
-        })
-
-        if (soloedCnt === 0) {
-            Player.players.forEach((p) => {
-                p.tmpMuted = false
-                p.inst.mute(this.muted)
-            })
-        } else {
-            Player.players.forEach((p) => {
-                if (!p.soloed) {
-                    p.tmpMuted = true
-                    p.inst.mute(true)
-                } else {
-                    p.tmpMuted = false
-                    p.inst.mute(false)
-                }
-            })
-        }
+        this.band.solo(this)
     }
 
     removeMe() {
@@ -87,12 +96,11 @@ export class Player extends Savable implements Ticker, Thing {
 
 
     saveDB(saver: any): any {
-        if (this.id !== null) return this.id
 
+        if (this.id !== null) return this.id
 
         let postItems: any = {}
 
-        // if (this.ticker instanceof ItemSaver ) {
         if (this.ticker.addPostItems !== undefined) {
             this.ticker.addPostItems(postItems, saver)
         }
